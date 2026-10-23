@@ -3,50 +3,29 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FiEye, FiEyeOff, FiArrowLeft, FiCheck } from "react-icons/fi";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import useAuth from "@/store/context/auth.context";
+import Loader from "@/components/common/Loader";
 
 export default function RegisterPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+ // * Access authentication state and sign-up handlers from AuthContext.
+const { state, signUpChange, signUpSubmit } = useAuth();
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }
+// * Toggle password visibility in the sign-up form.
+const [showPassword, setShowPassword] = useState(false);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
+// * Toggle confirm password visibility in the sign-up form.
+const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
 
-    if (form.name.trim().length < 2) {
-      setError("Please enter your full name.");
-      return;
-    }
-
-    if (form.password.length < 8) {
-      setError("Your password must contain at least 8 characters.");
-      return;
-    }
-
-    if (form.password !== form.confirmPassword) {
-      setError("Your passwords do not match.");
-      return;
-    }
-
-    // TODO: Connect to POST /api/auth/register.
-    setError("Registration API is not connected yet.");
-  }
 
   const inputClass =
     "w-full rounded-sm border border-[#e6e0d6] bg-[#fdfcf9] px-4 py-3.5 text-sm text-[#292820] outline-none transition placeholder:text-[#aaa397] focus:border-[#a58a65] focus:ring-1 focus:ring-[#a58a65]/20";
 
   return (
+   <>
+   <Navbar/>
     <main className="flex min-h-screen items-center justify-center bg-[#f5f2eb] px-4 py-8 sm:px-6 lg:py-12">
       <div className="w-full max-w-[1080px]">
         <Link
@@ -119,6 +98,7 @@ export default function RegisterPage() {
             <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-[#927650]">
               Become a member
             </p>
+            {state.loading&&<Loader/>}
 
             <h2 className="mt-3 font-serif text-3xl font-normal text-[#292820] sm:text-4xl">
               Create account.
@@ -128,24 +108,24 @@ export default function RegisterPage() {
               Join us and find something lovely.
             </p>
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            <form onSubmit={signUpSubmit} className="mt-8 space-y-5">
               <div>
                 <label
-                  htmlFor="name"
+                
                   className="mb-2 block text-xs font-medium text-[#403d35]"
                 >
                   Full name
                 </label>
                 <input
-                  id="name"
-                  name="name"
+                 
+                  name="fullName"
                   type="text"
-                  autoComplete="name"
+                  // autoComplete="name"
                   required
                   minLength={2}
                   maxLength={80}
-                  value={form.name}
-                  onChange={handleChange}
+                  value={state.registerForm.fullName}
+                  onChange={signUpChange}
                   placeholder="Enter your full name"
                   className={inputClass}
                 />
@@ -165,8 +145,8 @@ export default function RegisterPage() {
                   autoComplete="email"
                   required
                   maxLength={254}
-                  value={form.email}
-                  onChange={handleChange}
+                  value={state.registerForm.email}
+                  onChange={signUpChange}
                   placeholder="you@example.com"
                   className={inputClass}
                 />
@@ -189,8 +169,8 @@ export default function RegisterPage() {
                     required
                     minLength={8}
                     maxLength={128}
-                    value={form.password}
-                    onChange={handleChange}
+                    value={state.registerForm.password}
+                  onChange={signUpChange}
                     placeholder="At least 8 characters"
                     className={`${inputClass} pr-12`}
                   />
@@ -223,12 +203,12 @@ export default function RegisterPage() {
                 <div className="relative">
                   <input
                     id="confirmPassword"
-                    name="confirmPassword"
+                    name="cPassword"
                     type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"
                     required
-                    value={form.confirmPassword}
-                    onChange={handleChange}
+                    value={state.registerForm.cPassword}
+                  onChange={signUpChange}
                     placeholder="Enter your password again"
                     className={`${inputClass} pr-12`}
                   />
@@ -250,11 +230,7 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {error && (
-                <p role="alert" className="text-xs leading-5 text-red-600">
-                  {error}
-                </p>
-              )}
+              
 
               <button
                 type="submit"
@@ -268,7 +244,7 @@ export default function RegisterPage() {
             <p className="mt-7 text-center text-sm text-[#777166]">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href="/sign-up"
                 className="font-medium text-[#927650] underline-offset-4 hover:underline"
               >
                 Sign in
@@ -293,5 +269,7 @@ export default function RegisterPage() {
         </div>
       </div>
     </main>
+   <Footer/>
+   </>
   );
 }

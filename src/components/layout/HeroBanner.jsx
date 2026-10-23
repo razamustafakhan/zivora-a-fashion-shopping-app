@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function HeroBanner() {
   return (
     <section className="px-4 pb-8 pt-5 sm:px-8 lg:px-12">
-      <div className="relative mx-auto grid max-w-[1440px] overflow-hidden rounded-2xl bg-[#eee9df] lg:min-h-[570px] lg:grid-cols-2">
+      <div className="relative mx-auto grid max-w-360 overflow-hidden rounded-2xl bg-[#eee9df] lg:min-h-142.5 lg:grid-cols-2">
         {/* Text content */}
         <div className="relative z-10 flex flex-col justify-center px-6 py-12 sm:px-12 sm:py-16 lg:px-16 lg:py-20">
           <div className="mb-7 flex items-center gap-3">
@@ -15,7 +15,7 @@ export default function HeroBanner() {
           </div>
 
           <h1 className="max-w-xl font-serif text-4xl font-normal leading-[1.15] tracking-tight text-[#292820] sm:text-5xl lg:text-6xl xl:text-7xl">
-            Make every moment{" "}
+            Make every moment
             <span className="italic text-[#9c7c53]">
               a little more beautiful.
             </span>
@@ -53,7 +53,7 @@ export default function HeroBanner() {
         </div>
 
         {/* Hero image */}
-        <div className="relative min-h-[320px] overflow-hidden sm:min-h-[430px] lg:min-h-full">
+        <div className="relative min-h-80 overflow-hidden sm:min-h-107.5 lg:min-h-full">
           <Image
             src="/images/zivora-hero.jpg"
             alt="Elegant Zivora lifestyle collection featuring décor and accessories"
@@ -63,7 +63,7 @@ export default function HeroBanner() {
             className="object-cover object-center transition duration-700 hover:scale-[1.03]"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent" />
 
           <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between sm:bottom-8 sm:left-8 sm:right-8">
             <div className="rounded-lg border border-white/40 bg-white/75 px-4 py-3 backdrop-blur-md">

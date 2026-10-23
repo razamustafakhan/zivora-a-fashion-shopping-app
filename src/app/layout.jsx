@@ -1,5 +1,7 @@
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "@/store/StoreProvider";
+import  { Toaster } from 'react-hot-toast';
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -19,7 +21,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${openSans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <StoreProvider>{children}</StoreProvider>
+         <Toaster position="top-right" />
+      </body>
     </html>
   );
 }

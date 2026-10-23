@@ -5,25 +5,12 @@ import Link from "next/link";
 import { FiEye, FiEyeOff, FiArrowLeft } from "react-icons/fi";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import useAuth from "@/store/context/auth.context";
 
 export default function LoginPage() {
+ const {state,signInChange,signInSubmit}=  useAuth()
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
-
-    if (!email.trim() || !password) {
-      setError("Please enter your email and password.");
-      return;
-    }
-
-    // Connect your authentication API here.
-    console.log("Login form ready for API integration");
-  }
+ 
 
   return (
     <>
@@ -95,7 +82,7 @@ export default function LoginPage() {
                 Sign in to continue your Zivora experience.
               </p>
 
-              <form onSubmit={handleSubmit} className="mt-9 space-y-5">
+              <form onSubmit={signInSubmit} className="mt-9 space-y-5">
                 <div>
                   <label
                     htmlFor="email"
@@ -106,10 +93,11 @@ export default function LoginPage() {
                   <input
                     id="email"
                     type="email"
+                    name="email"
                     autoComplete="email"
                     required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={state.loginForm.email}
+                    onChange={signInChange}
                     placeholder="you@example.com"
                     className="w-full rounded-sm border border-[#e4dfd5] bg-[#fdfcf9] px-4 py-3.5 text-sm outline-none transition focus:border-[#a58a65] focus:ring-1 focus:ring-[#a58a65]/20"
                   />
@@ -130,12 +118,13 @@ export default function LoginPage() {
 
                   <div className="relative">
                     <input
+                    name="password"
                       id="password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="current-password"
                       required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      value={state.loginForm.password}
+                    onChange={signInChange}
                       placeholder="Enter your password"
                       className="w-full rounded-sm border border-[#e4dfd5] bg-[#fdfcf9] px-4 py-3.5 pr-12 text-sm outline-none transition focus:border-[#a58a65] focus:ring-1 focus:ring-[#a58a65]/20"
                     />
@@ -157,11 +146,7 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {error && (
-                  <p role="alert" className="text-sm text-red-600">
-                    {error}
-                  </p>
-                )}
+              
 
                 <button
                   type="submit"
@@ -174,7 +159,7 @@ export default function LoginPage() {
               <p className="mt-8 text-center text-sm text-[#777166]">
                 New to Zivora?{" "}
                 <Link
-                  href="/register"
+                  href="/sign-up"
                   className="font-medium text-[#927650] hover:underline"
                 >
                   Create an account

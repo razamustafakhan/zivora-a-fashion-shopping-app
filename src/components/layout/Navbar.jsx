@@ -10,17 +10,20 @@ import {
   FiArrowUpRight,
 } from "react-icons/fi";
 
-export default function Navbar() {
-  const [open, setOpen] = useState(false);
-
-  const navLinks = [
+ const navLinks = [
     { name: "Home", href: "/" },
     { name: "Shop All", href: "/shop" },
     { name: "Decor", href: "/categories/decor" },
     { name: "Fashion", href: "/categories/fashion" },
     { name: "Jewellery", href: "/categories/jewellery" },
     { name: "Our Story", href: "/about" },
+    { name: "Login", href: "/sign-in" },
   ];
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
+
+ 
 
   return (
     <header className="sticky top-0 z-50 bg-[#faf9f6] text-[#24231f]">
@@ -50,7 +53,9 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-[11px] font-medium uppercase tracking-[0.13em] text-[#625f57] transition-colors hover:text-[#b28a57]"
+              className={`text-[11px] font-medium uppercase tracking-[0.13em] text-[#625f57] transition-colors hover:text-[#b28a57] ${
+  link.name === "Login" ? "bg-red-500" : ""
+}`}
               >
                 {link.name}
               </Link>
