@@ -1,0 +1,169 @@
+export const authOptions = {
+  // Your existing NextAuth configuration goes here
+};
+
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
+
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+
+export default async function AdminLayout({ children }) {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) {
+    redirect("/sign-in");
+  }
+
+  if (session.user.role !== "admin") {
+    redirect("/");
+  }
+
+  return <>{children}</>;
+}
+
+export function proxy(request: NextRequest) {
+  // Logic goes here
+}
+This function runs when an incoming request matches the Proxy configuration.
+
+The request parameter contains information about the incoming request.
+
+For example, if someone visits:
+
+
+text
+http://localhost:3000/about
+You can inspect the request URL:
+
+
+ts
+console.log(request.url)
+You can also access the pathname:
+
+
+ts
+console.log(request.nextUrl.pathname)
+The pathname would be /about.
+
+C. Redirect the user
+
+ts
+return NextResponse.redirect(
+  new URL('/home', request.url)
+)
+This tells the browser to navigate to /home.
+
+Suppose the user visits:
+
+
+text
+/about
+The browser receives a redirect and navigates to:
+
+
+text
+/home
+The new URL('/home', request.url) expression constructs an absolute URL using the incoming request's origin.
+
+For example:
+
+
+text
+http://localhost:3000/home
+This is a redirect, meaning the browser's URL changes.
+
+D. Understand the matcher
+
+ts
+export const config = {
+  matcher: '/about/:path*',
+}
+The matcher tells Next.js which paths should trigger Proxy.
+
+In this example:
+
+URL
+
+Does Proxy run?
+
+/about
+
+Yes
+
+/about/team
+
+Yes
+
+/about/team/contact
+
+Yes
+
+/home
+
+No
+
+/products
+
+No
+
+The pattern :path* means zero or more additional path segments after /about.
+
+Without a matcher, Proxy can run on a much broader set of requests, depending on your configuration.
+
+4. Redirect vs. Rewrite vs. Continue
+These are three important concepts to understand.
+
+Redirect
+The browser is told to visit a different URL.
+
+
+ts
+return NextResponse.redirect(
+  new URL('/login', request.url)
+)
+Example: /dashboard → /login. The browser URL changes.
+
+Rewrite
+Next.js serves content from a different destination without changing the browser's visible URL.
+
+
+ts
+return NextResponse.rewrite(
+  new URL('/home', request.url)
+)
+Example: the browser still displays /about, but Next.js serves the content associated with /home.
+
+Continue to the requested destination
+Allow the request to proceed normally.
+
+
+ts
+return NextResponse.next()
+Example: Proxy checks the request and then allows the /about page to load.
+
+5. Practical example: Redirect based on a cookie
+Suppose your application has a dashboard and you want to redirect users who do not have a session cookie to the login page.
+
+
+ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export function proxy(request: NextRequest) {
+  const session = request.cookies.get('session')
+
+  if (!session) {
+    return NextResponse.redirect(
+      new URL('/login', request.url)
+    )
+  }
+
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: '/dashboard/:path*',
+}

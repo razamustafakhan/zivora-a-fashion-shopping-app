@@ -1,22 +1,17 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-
-import { connectDB } from "@/lib/db";
+import connectDB from "@/config/db";
 import User from "@/models/User";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const handler = NextAuth({
   session: {
     strategy: "jwt",
   },
 
-  pages: {
-    signIn: "/login",
-  },
-
   providers: [
     Credentials({
-      name: "Custom Login",
+      name: "credentials",
 
       credentials: {
         email: {
@@ -42,17 +37,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        const user = await User.findOne({ email })
-          .select("+password");
+        const user = await User.findOne({ email }).select("+password");
+        console.log(user, "user");
 
         if (!user) {
           return null;
         }
 
-        const isValid = await bcrypt.compare(
-          password,
-          user.password
-        );
+        const isValid = await bcrypt.compare(password, user.password);
 
         if (!isValid) {
           return null;
@@ -88,3 +80,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
 });
+
+export { handler as GET, handler as POST };

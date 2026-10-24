@@ -9,6 +9,7 @@ import authReducer from "../reducers/auth.reducer";
 import { apiPost } from "@/services/api";
 import { showToastError, showToastSuccess } from "@/utils/notification";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 // * Create a context to share authentication data across components.
 const AuthContext = createContext();
@@ -46,7 +47,7 @@ const AuthProvider = ({ children }) => {
   // * Handle changes in the sign-in form inputs.
   const signInChange = (e) => {
     const { name, value } = e.target;
-    console.log(name,value)
+    console.log(name, value);
 
     dispatch({
       type: "SIGN_IN",
@@ -64,7 +65,7 @@ const AuthProvider = ({ children }) => {
       if (data.success) {
         showToastSuccess(data.message);
         setSuccess();
-        router.push("/sign-in")
+        router.push("/sign-in");
       }
     } catch (error) {
       console.log(error.message);
@@ -73,9 +74,29 @@ const AuthProvider = ({ children }) => {
   };
 
   // TODO: Implement the sign-in form submission logic.
-  const signInSubmit = (e) => {
-    e.preventDefault()
-    console.log(">>>>>>>>>>>>>")
+  const signInSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await signIn("credentials", {
+        email: state.loginForm.email,
+        password: state.loginForm.password,
+        redirect: false,
+      });
+      console.log(result, "result");
+
+      if (result?.error) {
+        showToastError("Invalid email or password");
+        return;
+      }
+
+      showToastSuccess("Login successful");
+      setSuccess();
+
+      // router.push("/dashboard");
+      // router.refresh();
+    } catch (error) {
+      showToastError(error.message || "Login failed");
+    }
   };
 
   // * Share authentication state and form handlers with child components.
