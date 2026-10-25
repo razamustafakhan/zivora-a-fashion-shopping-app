@@ -34,7 +34,7 @@ export default function Topbar({ onMenuClick }) {
   const title = currentPage?.title || "Dashboard";
 
   return (
-    <header className="sticky top-0 z-30 flex h-[78px] items-center justify-between gap-4 border-b border-[#e9e4da] bg-white/95 px-4 backdrop-blur sm:px-7 lg:px-9">
+    <header className="flex h-[78px] items-center justify-between gap-4 border-b border-[#e9e4da] bg-white/95 px-4 backdrop-blur sm:px-7 lg:px-9">
       <div className="flex min-w-0 items-center gap-3">
         <button
           type="button"

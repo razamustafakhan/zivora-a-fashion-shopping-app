@@ -28,17 +28,21 @@ const navigation = [
   {
     label: "CATALOG",
     items: [
-      { label: "All Products", href: "/admin/products", icon: FiShoppingBag },
+      {
+        label: "All Products",
+        href: "/admin/product/list",
+        icon: FiShoppingBag,
+      },
       {
         label: "Add Product",
-        href: "/admin/products/new",
+        href: "/admin/product/new",
         icon: FiPlusSquare,
         exact: true,
       },
-      { label: "Categories", href: "/admin/categories", icon: FiTag },
+      { label: "Categories", href: "/admin/category/list", icon: FiTag },
       {
         label: "Add Category",
-        href: "/admin/categories/new",
+        href: "/admin/category/new",
         icon: FiList,
         exact: true,
       },
@@ -52,7 +56,6 @@ const navigation = [
       { label: "Customers", href: "/admin/customers", icon: FiUsers },
     ],
   },
- 
 ];
 
 export default function Sidebar({ mobileOpen = false, onClose }) {
@@ -66,13 +69,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
 
   return (
     <>
-    
-
-      <aside
-        className="border-r border-[#e9e4da] bg-white transition-all duration-300 flex-1"
-        
-      
-      >
+      <aside className="border-r border-[#e9e4da] bg-white transition-all duration-300 flex-1">
         {/* Brand */}
         <div className="flex h-[78px] shrink-0 items-center justify-between border-b border-[#eee9e0] px-5">
           <Link href="/admin" className="flex min-w-0 items-center gap-3">
@@ -80,19 +77,13 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
               Z
             </span>
             <span>Zivora</span>
-
-           
           </Link>
-
-      
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 space-y-7  px-3 py-6">
           {navigation.map((group) => (
             <div key={group.label}>
-            
-
               <div className="space-y-1">
                 {group.items.map((item) => {
                   const Icon = item.icon;
@@ -102,8 +93,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
                     <Link
                       key={item.href}
                       href={item.href}
-                     
-                     title={item.label}
+                      title={item.label}
                       className={`group flex min-h-11 items-center gap-3 rounded-sm px-3 text-[13px] transition ${
                         active
                           ? "bg-[#f4efe5] font-medium text-[#7f633e]"
@@ -119,9 +109,7 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
                         }`}
                       />
 
-                      
-                        <span className="flex-1">{item.label}</span>
-                     
+                      <span className="flex-1">{item.label}</span>
 
                       {active && (
                         <span className="h-1.5 w-1.5 rounded-full bg-[#927650]" />
@@ -133,8 +121,6 @@ export default function Sidebar({ mobileOpen = false, onClose }) {
             </div>
           ))}
         </nav>
-
-      
       </aside>
     </>
   );

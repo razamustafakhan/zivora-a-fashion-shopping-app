@@ -167,3 +167,80 @@ export function proxy(request: NextRequest) {
 export const config = {
   matcher: '/dashboard/:path*',
 }
+
+
+
+
+
+
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+
+export function proxy(request) {
+  console.log(">>>>>>>>>>>>>>  this is running");
+  console.log(request);
+  return NextResponse.redirect(new URL("/sign-in", request.url));
+}
+
+export const config = {
+  matcher: "//:path*",
+};
+
+
+ const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Product name is required.";
+    } else if (formData.name.trim().length < 3) {
+      newErrors.name = "Product name must contain at least 3 characters.";
+    }
+
+    if (!formData.category) {
+      newErrors.category = "Please select a category.";
+    }
+
+    if (!formData.description.trim()) {
+      newErrors.description = "Product description is required.";
+    }
+
+    if (formData.mrp === "" || !Number.isFinite(mrp) || mrp <= 0) {
+      newErrors.mrp = "Enter a valid price greater than zero.";
+    }
+
+    if (
+      formData.sellingPrice === "" ||
+      !Number.isFinite(sellingPrice) ||
+      sellingPrice <= 0
+    ) {
+      newErrors.sellingPrice = "Enter a selling price greater than zero.";
+    } else if (sellingPrice > mrp && mrp > 0) {
+      newErrors.sellingPrice =
+        "Selling price cannot exceed the original price.";
+    }
+
+    if (
+      formData.stock === "" ||
+      !Number.isInteger(Number(formData.stock)) ||
+      Number(formData.stock) < 0
+    ) {
+      newErrors.stock = "Enter a valid non-negative stock quantity.";
+    }
+
+    if (
+      formData.lowStockThreshold === "" ||
+      !Number.isInteger(Number(formData.lowStockThreshold)) ||
+      Number(formData.lowStockThreshold) < 0
+    ) {
+      newErrors.lowStockThreshold =
+        "Enter a valid non-negative stock threshold.";
+    }
+
+    if (images.length === 0) {
+      newErrors.images = "Upload at least one product image.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };

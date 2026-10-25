@@ -1,39 +1,54 @@
 "use client";
+
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Sidebar from "@/components/common/Sidebar";
 import Topbar from "@/components/common/Topbar";
-import React from "react";
-import { redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
 
 const AdminLayout = ({ children }) => {
   const { data: session, status } = useSession();
-  console.log(session, status);
+  const router = useRouter();
 
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/sign-in");
+    } else if (status === "authenticated" && session?.user?.role !== "admin") {
+      router.replace("/");
+    }
+  }, [status, session, router]);
+
+  // Render a loading state only while authentication is unresolved.
   if (status === "loading") {
-    return <p>Checking session...</p>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f8f7f3]">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#e8e2d7] border-t-[#a58a65]" />
+          <p className="text-sm text-[#827b70]">Preparing your dashboard...</p>
+        </div>
+      </div>
+    );
   }
 
-  if (status === "unauthenticated") {
-    redirect("/sign-in");
-  }
-  if (status === "authenticated" || session?.user.role !== "admin") {
-    redirect("/");
+  if (status !== "authenticated" || session?.user?.role !== "admin") {
+    return null;
   }
 
   if (session?.user?.role !== "admin") {
-    redirect("/");
+    return <p>Checking admin access...</p>;
   }
+
   return (
-    <div>
-      <div className="admin flex">
-        <div className="sidebar flex-1">
-          <Sidebar />
-        </div>
-        <div className="right flex-8">
-          <Topbar />
-          <div className="main">{children}</div>
-        </div>
-      </div>
+    <div className="admin flex">
+      {" "}
+      <div className="sidebar flex-1 w-[300px]">
+        {" "}
+        <Sidebar />{" "}
+      </div>{" "}
+      <div className="right flex-6">
+        {" "}
+        <Topbar /> <div className="main">{children}</div>{" "}
+      </div>{" "}
     </div>
   );
 };

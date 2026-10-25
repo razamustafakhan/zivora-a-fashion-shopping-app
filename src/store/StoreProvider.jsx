@@ -1,10 +1,16 @@
-import React from 'react'
-import { AuthProvider } from './context/auth.context'
+import React from "react";
+import { AuthProvider } from "./context/auth.context";
+import { CategoryProvider } from "./context/category.context";
+import { ProductProvider } from "./context/product.context";
 
-const StoreProvider = ({children}) => {
+const StoreProvider = ({ children }) => {
   return (
-    <AuthProvider>{children}</AuthProvider>
-  )
-}
+    <AuthProvider>
+      <CategoryProvider>
+        <ProductProvider>{children}</ProductProvider>
+      </CategoryProvider>
+    </AuthProvider>
+  );
+};
 
-export default StoreProvider
+export default StoreProvider;
